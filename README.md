@@ -29,9 +29,9 @@ Precis som liturgi i religiösa sammanhang låter folk åminnas viktiga lärdoma
 ## 2.1 Namn på klasser, metoder och properties
 Ge komponenter bra, deskriptiva namn och följ [Microsofts guide för kodstil.](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names)
 
-## 2.2 IF-satser 
+## 2.2 IF-satser
 
-**Feroles huvudregel för If-satser är:** 
+**Feroles huvudregel för If-satser är:**
 *Bra If-satser låter utvecklaren välja att fokusera på antingen flödet eller logiken.*
 
 Dåliga if-satser tvingar oss helt enkelt att lusläsa kod oavsett om vi vill förstå flöde eller logik. If-satser måste konstrueras på ett sådant vis att en programmerare inte behöver anstränga sig för att förstå vad deras uppgift är. Följande är alltså ett **dåligt exempel** eftersom man måste lusläsa koden för att förstå if-satsens uppgift:
@@ -111,15 +111,103 @@ private Note ViewHiddenNote(Guid noteId)
 
    if (note.IsHidden && !user.CanViewHiddenNote(noteId))
        return null;
-	
+
 	return _noteService.GetHiddenNote(noteId);
 }
 ```
 
-## 2.3 Metodparametrar
+## 2.3 Try-catch
+Att använda try-catch vid tillfällen i koden där det kan uppstå fel kan förhindra att applikationen kraschar samt hjälper till vid felsökning och förtydligande vad som blivit fel. En bra tumregel är att använda try-catch i varje interaktion med extern service (api, db etc).
+
+1. Om det är troligt att ett fel kan uppstå, använd guard statements istället för try-catch. Tänk på att skriva effektiv kod.
+**Dåligt exempel**:
+```csharp
+   try
+   {
+        dbConnection.Close();
+   }
+   catch (InvalidOperationsException ex)
+   {
+        log.WriteToLog(ex);
+   }
+   catch (exception ex)
+   {
+        log.WriteToLog(ex);
+   }
+```
+
+**Bättre exempel**:
+```csharp
+
+    if (dbConnection.State != ConnectionState.Closed)
+        dbconnection.Close;
+```
+
+2. Skapa egna exception-klasser enbart när fördefinierade klasser inte räcker.
+
+3. Använd grammatiskt korrekta felmeddelanden.
+
+4. Hantera vanligare Exceptions före ovanligare.
+
+
+## 2.3.1 Fördefinierade exceptions
+Använd fördefinierade Exceptions för att underlätta hanterandet av vanligt förekommande problem.
+**Bättre exempel**:
+```csharp
+
+    private User? GetUserFromDb(string userId)
+    {
+        if (string.IsNullOrEmpty(userId)
+            throw new ArgumentNullException("UserId is null or empty", ex);
+
+        try
+        {
+            db.GetUserById(userId);
+        }
+        catch (ArgumentException ex)
+        {
+            log.Write("Argument exception thrown in method GetUserFromDb", ex)
+            throw new ArgumentException("Argument exception thrown in method GetUserFromDb", ex);
+        }
+        catch (Exception ex)
+        {
+            log.Write("Exception thrown in method GetUserFromDb", ex);
+            throw ex;
+        }
+    }
+```
+
+## 2.3.2 Definiera egen exceptions vid behov
+1. Avsluta alltid namnet på Exception-klassen med ordet "Exception". Till exempel MongoDbConnectionException.
+2. Använd tre konstruktorer i Exception-klassen.
+**Exempel**:
+```csharp
+
+    public class MongoDbConnectionException : Exception
+    {
+        public MongoDbConnectionException()
+        {
+        }
+
+        public MongoDbConnectionException(string message)
+            : base(message)
+        {
+        }
+
+        public MongoDbConnectionException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+```
+
+3. Överväg att skapa lokaliserade strängar för exception för applikationer som används över flera länder. Se https://learn.microsoft.com/en-us/dotnet/standard/exceptions/how-to-create-localized-exception-messages
+
+
+## 2.4 Metodparametrar
 En metod ska ha två, max tre in-parametrar. Ifall du behöver fler parametrar än det så är det antingen dags för att skapa någon form av settings-objekt med standardvärden som fångar de flesta anropen, eller bryta ut hela metoden till en separat klass. Metoder med tio, femton, tjugo parametrar får aldrig förekomma.
 
-## 2.4 Controllers i MVC
+## 2.5 Controllers i MVC
 Controllers i projekt som följer MVC-mönstret är **framför allt till för routing**. Inte logik, validering och annat. Har du en endpoint där det inte omedelbart blir klart vad det är som händer och vilken vy eller dylikt som servas då är det också dags att överväga att refaktorera om den. Använd middleware för att validera data och services/vad helst du vill för att bygga upp modeller, konvertera DTO:s osv.
 
 
@@ -138,8 +226,8 @@ Baserat på ovan är följande ett **dåligt exempel**:
 public void CreateOrder(Order order)
 {
     var orderCreated = _orderService.Create(order);
-    
-    if(orderCreated) { 
+
+    if(orderCreated) {
         var smtpClient = new SmtpClient("smtp.gmail.com")
         {
             Port = 587,
@@ -159,7 +247,7 @@ Ett **bättre exempel** är som följande:
 public void CreateOrder(Order order)
 {
     var orderCreated = _orderService.Create(order);
-    
+
     if(orderCreated)
     {
         Emailer.SendOrderConfirmation(order);
@@ -197,7 +285,7 @@ Den generella principen är att en klass bara ska ha **en anledning till att fö
 
 
 ## 2. Open/Closed Principle
-OCP menar att kod ska vara öppen för utökning men stängd för modifikation. Det enklaste sättet att förklara detta på är ungefär som så att kod som ligger i produktion och är testad inte ska behöva testas om när man lägger till ny funktionalitet. Det vanligaste exemplen som brukar ges på detta innebär i korthet att man ska undvika en massa if-satser och istället använda sig av interfaces. Men detta får ses som ett mer kliniskt exempel. 
+OCP menar att kod ska vara öppen för utökning men stängd för modifikation. Det enklaste sättet att förklara detta på är ungefär som så att kod som ligger i produktion och är testad inte ska behöva testas om när man lägger till ny funktionalitet. Det vanligaste exemplen som brukar ges på detta innebär i korthet att man ska undvika en massa if-satser och istället använda sig av interfaces. Men detta får ses som ett mer kliniskt exempel.
 
 **Dåligt** exempel:
 ```csharp
@@ -210,15 +298,15 @@ var field = new DataField()
 field.SetValue(int.MaxValue);
 ```
 ```csharp
-public class DataField 
+public class DataField
 {
     public Guid Id { get; set; }
     public DateTime Modified { get; set; }
     public DataFieldType DataType { get; set; }
-    private dynamic _value { get; set; } 
-    
-    public dynamic GetValue() { 
-        
+    private dynamic _value { get; set; }
+
+    public dynamic GetValue() {
+
         switch(DataType)
         {
             case DataFieldType.PlainText:
@@ -299,20 +387,20 @@ public class IntegerDataField : IDataField
         public dynamic Value { get { return Convert.ChangeType(_value, TypeCode.Int64); } set { _value = value; } }
     }
 ```
-Med det bättre designmönstret kan vi lägga till hur många nya datafältstyper som helst utan att röra koden som används för de gamla fälten. 
+Med det bättre designmönstret kan vi lägga till hur många nya datafältstyper som helst utan att röra koden som används för de gamla fälten.
 
 Även OCP kan dras till absurdum där mängder av interfaces skapas helt i onödan. Det är därför viktigt att vara medveten om att interfaces skiner när det används av flera klasser, inte en enstaka klass. I t.ex. Dependency injection används trots detta interfaces men då mer för att komma runt tekniska begränsningar. Så slösa inte tid på att skriva interfaces som du aldrig kommer använda, men ha alltid med dig princip #*6. Bra kod lever, förändras och refaktoreras kontinuerligt och vid behov.*
 
 ## 3. Liskov Substitution Principle
 Den något svårförståliga officiella förklaringen för LSP är som följande:
 
-> Let ϕ ( x ) be a property provable about objects x of type T.  
+> Let ϕ ( x ) be a property provable about objects x of type T.
 > Then ϕ ( y ) should be true for objects y of type S where S is a subtype of T.
 
 Detta refereras ofta till som "Kära någon, vad betyder detta?-principen" 😉
-Men oroa dig inte, vi kommer bryta ner LSP och ge exempel. 
+Men oroa dig inte, vi kommer bryta ner LSP och ge exempel.
 
-Omskrivet till mer läsbara termer kan man säga att LSP handlar om att ärvda objekt ska ha ett mått av hållbarhet. 
+Omskrivet till mer läsbara termer kan man säga att LSP handlar om att ärvda objekt ska ha ett mått av hållbarhet.
 Detta mått utgörs av en princip som säger att om objektet S är en undertyp av objektet T så ska man kunna ersätta objekt av typen T med objekt av typen S utan att förstöra något. Något omskrivet blir detta:
 
 > Möjligheten att ersätta en instans av en föräldraklass med en instans av en klass som ärver den utan negativa effekter
@@ -377,7 +465,7 @@ public interface INote
 ```
 Men med tiden utökades funktionaliteten. Bilder och citat lades till samt en funktion som kunde hämta en URL-källa och göra en backup av URL:en för referenssyften. Detta lades in i interfacet:
 ```csharp
-    public interface INote  
+    public interface INote
     {
         bool SaveText(string text);
         string GetText();
@@ -392,7 +480,7 @@ Men med tiden utökades funktionaliteten. Bilder och citat lades till samt en fu
 Det pikära med den här praktiken är att alla anteckningar inte är av en typ som har bilder, citat eller url-backuper. Nu tvingas dock alla anteckningar att implementera dessa metoder. **En bättre praktik** hade varit att begrunda Single Responsibility Principle och ISR för att stycka upp interfacet i flera mindre interfaces:
 
 ```csharp
-public interface ITextNote  
+public interface ITextNote
 {
      bool SaveText(string text);
      string GetText();
