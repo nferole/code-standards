@@ -116,10 +116,79 @@ private Note ViewHiddenNote(Guid noteId)
 }
 ```
 
-## 2.3 Metodparametrar
+## 2.3 Try-catch
+Att använda try-catch vid tillfällen i koden där det kan uppstå fel kan förhindra att applikationen kraschar samt hjälper till vid felsökning och förtydligande vad som blivit fel. 
+Tänk på att:
+1. Om det är troligt att ett fel kan uppstå, använd guard statements istället för try-catch. Tänk på att skriva effektiv kod.
+**Dåligt exempel**:
+```csharp
+
+   try
+   {
+        dbConnection.Close();
+   }
+   catch (InvalidOperationsException ex)
+   {
+        log.WriteToLog(ex);
+   }
+   catch (exception ex)
+   {
+        log.WriteToLog(ex);
+   }
+```
+
+**Bättre exempel**:
+```csharp
+    
+    if (dbConnection.State != ConnectionState.Closed)
+        dbconnection.Close;
+```
+
+2. Skapa egna exception-klasser enbart när fördefinierade klasser inte räcker.
+
+3. Använd grammatiskt korrekta felmeddelanden.
+
+4. Hantera vanligare Exceptions före ovanligare.
+
+
+## 2.3.1 Fördefinierade exceptions
+Använd fördefinierade Exceptions för att underlätta hanterandet av vanligt förekommande problem.
+**Bättre exempel**:
+```csharp
+
+    private User? GetUserFromDb(string userId)
+    {
+        if (string.IsNullOrEmpty(userId)
+            throw new ArgumentNullException()
+
+        try
+        {
+            db.GetUserById(userId);
+        }
+        catch (ArgumentException ex)
+        {
+            log.Write("Argument exception thrown in method GetUserFromDb", ex.InnerMessage, ex) 
+            throw ex; 
+        }
+        catch (Exception ex)
+        {
+            log.Write("Exception thrown in method GetUserFromDb", ex.InnerMessage, ex);
+            throw;
+        }
+    }
+```
+
+## 2.3.2 Definiera egen exceptions vid behov
+1. Avsluta alltid namnet på Exception-klassen med "Exception".
+2. Använd tre konstruktorer i Exception-klassen.
+
+3. Överväg att skapa lokaliserade strängar för exception för applikationer som används över flera länder. 
+
+
+## 2.4 Metodparametrar
 En metod ska ha två, max tre in-parametrar. Ifall du behöver fler parametrar än det så är det antingen dags för att skapa någon form av settings-objekt med standardvärden som fångar de flesta anropen, eller bryta ut hela metoden till en separat klass. Metoder med tio, femton, tjugo parametrar får aldrig förekomma.
 
-## 2.4 Controllers i MVC
+## 2.5 Controllers i MVC
 Controllers i projekt som följer MVC-mönstret är **framför allt till för routing**. Inte logik, validering och annat. Har du en endpoint där det inte omedelbart blir klart vad det är som händer och vilken vy eller dylikt som servas då är det också dags att överväga att refaktorera om den. Använd middleware för att validera data och services/vad helst du vill för att bygga upp modeller, konvertera DTO:s osv.
 
 
