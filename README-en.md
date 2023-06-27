@@ -1,5 +1,5 @@
-# Feroles programmeringsprinciper och SOLID-fusklapp
-What's following is my cheat note regarding SOLID principles and general QoL tips for software development. It has been developed as support tool for my development evenings, where I work with more junior developers and help them understand the world of software development. **NOTE: I'm in no way the greatest software developer in the world or a absolute authority** so if you have suggestions, please create a PR so I can learn something new! ❤️
+# Feroles coding principles and SOLID cheat note
+What's following is my cheat note regarding SOLID principles and general QoL tips for software development. It has been developed as support tool for my code evening sessions, where I work with junior developers and help them understand the world of software development. **NOTE: I'm in no way the greatest software developer in the world or a absolute authority** so if you have suggestions, please create a PR so I can learn something new! ❤️
 
 # 1. General philosophy
 ## 1. Good code let developers choose their engagement with the code
@@ -9,46 +9,39 @@ Bas code forces you to meticulously read every row and work your way through lar
 Bad code forces you to learn a lot about a solution, organization and their history to understand how to use existing functionality or create new functionality. E.g. when there exists a great number of ways to do one thing, such as fetching orders, products or patient information, without clearly marking what's outdated, depricated and duplicates. Good code is living, well documented and distinct.
 
 ## 3. Good code follows the general paradigm for the current solution, E.g. object oriented programming
+Bad code appears like it's follwing a paradigm but in reality it's not. The most common example I've encountered during my 7+ years of software development is that developers use object oriented programming like it would be the same thing, or almost the same thing, as procedurial programming. This often makes the choice of paradigm meaningless and leads to code with lesser quality. When a paradigm is chosen it's important that you really understand the paradigm and how to use it in a practical setting.
+
+## 4. Good code makes it possitble to add functionality without retesting unchanged functionality
+Bad code has massive methods or functions with great amount of logic and responsabilities. To change something in such component can create unexpected consequenses since the component isn't comprehensible. This forces you to retest existing as well as new or modified functionality. Good code is written in such a way that existing functionality never or rarely changes and new functionality can be added as a extension, i.e. Open/Closed Principle.
+
+## 5. Good code is often written in collaboration with others
+Most of what I've learned has been in collaboration with other. Even if you are some form of genious, you can learn and grown by working with other developers. Since the software industri is in a state of continuous radical change, it's important that we learn how to work together and learn from each other.
+
+## 6. Good code lives, changes and is refactored continuously and when need arises
+Don't write unneccecary abstractions or break down the code if it's short and efficent. But always know that good code needs to live, to be refactored and to change when the need arise. To change code, make abstractions or even partially/fully change the architecture must be a part of the development process. It's as vital as regularly changing oil and filter in your car.
+
+## 7. Good code has a liturgy, and it's called "unit tests"
+Just like liturgy (rituals of worship) in religious settings let people remember important lessons to free capacity for creating new things, good code has automated tests as it's liturgy. It let us continue our development with the certainty that there's a safty net that catches our mistakes when we inevitably makes them. This helps us to focus on the road ahead and to create new functionality and better solutions.
+
+**The fundational idea behind these principles is that we want to be able to finish our workday without headaches and not leave behind code that will be someone elses headache**
 
 
+# 2. General DO's and DON'ts
+## 2.1 Naming classes, methods and properties
+Give the components good, descriptive names and follow [Microsofts coding style guide.](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names)
 
-
-
-## 3. Bra kod följer det generella paradigm som lösningen har, t.ex. objektorientering
-Dålig kod ger sken av att följa ett paradigm men följer egentligen ett helt annat paradigm. Det vanligaste exemplet som jag stött på under de senaste 7+ åren av programmering är att folk använder objektorienterad programmering som om det vore samma sak eller nästan samma sak som procedurisk programmering, vilket ofta gör valet av paradigm meningslöst och skapar kod med sämre kvalité. När ett paradigm har valts är det därför viktigt att du försäkrar dig om vad det paradigmet innefattar och hur man använder sig av det.
-
-## 4. Bra kod möjliggör att du kan lägga till funktionalitet utan att testa om oförändrad funktionalitet
-Dålig kod har massiva metoder eller funktioner med en stor mängd logik och många ansvarsområden. Att ändra något i en sådan komponent kan skapa oförutsedda konsekvenser eftersom komponenten inte är överskådlig. Detta kräver att man testar om existerande  såväl som ny eller förändrad funktionalitet. Bra kod kommer runt detta genom att vara skriven på ett sådant sätt att existerande produktionssatt funktionalitet sällan eller aldrig ändras och ny funktionalitet läggs till som en utökning, dvs. Open/Closed principle.
-
-## 5. Bra kod är oftast skriven i sammarbete med andra
-Det mesta jag har lärt mig har jag gjort genom att sammarbeta med andra. Vissa kanske är genier men även dem kan växa och lära sig genom att arbeta med andra. Eftersom mjukvaruindustrin ändras radikalt kontinuerligt är det viktigt att vi lär oss att jobba tillsammans och lära från varandra.
-
-## 6. Bra kod lever, förändras och refaktoreras kontinuerligt och vid behov
-Skriv inte onödiga abstraktioner och hugg sönder koden om den är kort. Men ha alltid med dig att bra kod måste få leva, refaktoreras om och förändras när behoven uppstår. Att ändra kod, abstraktera kod och till och med ändra arkitektur helt eller delvis måste få vara del av utvecklingen. Det är lika väsentligt som att byta olja och filter i bilen med viss regelbundenhet.
-
-## 7. Bra kod har en liturgi och den stavas "enhetstester"
-Precis som liturgi i religiösa sammanhang låter folk åminnas viktiga lärdomar för att frigöra kapacitet till att skapa nytt så har bra kod automatiserade tester som sin egna liturgi. Det låter oss vidareutveckla kod förvissade om att det finns ett skyddsnät som fångar upp våra misstag vilket i sin tur hjälper oss att fokusera blicken framåt och skapa nya funktioner och bättre lösningar.
-
-**Den grundläggande idén bakom dessa principer är att vi vill avsluta våra arbetsdagar utan huvudvärk och lämna efter oss kod som inte blir någon annans huvudvärk.**
-
-# 2. Generella DO's and DON'ts
-## 2.1 Namn på klasser, metoder och properties
-Ge komponenter bra, deskriptiva namn och följ [Microsofts guide för kodstil.](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names)
-
-## 2.2 IF-satser
-
-**Feroles huvudregel för If-satser är:**
-*Bra If-satser låter utvecklaren välja att fokusera på antingen flödet eller logiken.*
-
-Dåliga if-satser tvingar oss helt enkelt att lusläsa kod oavsett om vi vill förstå flöde eller logik. If-satser måste konstrueras på ett sådant vis att en programmerare inte behöver anstränga sig för att förstå vad deras uppgift är. Följande är alltså ett **dåligt exempel** eftersom man måste lusläsa koden för att förstå if-satsens uppgift:
+## 2.2 IF-statments
+**Feroles main rule regarding If-statements:**
+*Good If-statements let the developer make the choice beteween focusing on the flow or the logic.*
+Bad if-statements forces us to meticously examine code regardless if we want to understand the flow or the logic. If-statements must be constructed in such manner that a developer don't have to exert oneself in order to understand their task. The following is therefor a **bad example** since you have to really study the code to understand the function of the if-statement:
 ```csharp
 if(Attachment != null && data != null && _user.UserPermissions.Contains("W") && AllowedFileTypes.Contains(Attachment.FileType))
 {
     Attachment.Upload(data);
 }
 ```
-Och följande är ett **bättre exempel**:
-```csharp
+
+And the following is a **better example**:
 if (IsDataAndPermissionsValid(data))
 {
     Attachment.Upload(data);
@@ -60,7 +53,8 @@ private bool IsDataAndPermissionsValid(byte[] data)
     return Attachment != null && data != null && _user.UserPermissions.Contains("W") && AllowedFileTypes.Contains(Attachment.FileType);
 }
 ```
-Man kanske till och med vill utöka läsbarheten i den nya metoden något:
+
+You could even expand the readability of the new method slighly by:
 ```csharp
 private bool IsDataAndPermissionsValid(byte[] data)
 {
@@ -76,15 +70,15 @@ private bool IsDataAndPermissionsValid(byte[] data)
     return true;
 }
 ```
-"Råa" if-satser bör hantera grundläggande datatyper och innefatta en mindre mängd konditioner. Följande är alltså ett **dåligt exempel**:
 
+Raw if-statements should handle primitive datatypes och contain a lesser amount of conditions. The following code is therefor a **bad example**:
 ```csharp
 if(IsUserRegistered && ShouldReverifySession && HasTimedOffers && IsInCheckout)
 {
    ...
 }
 ```
-och följande är ett **bra exempel**:
+And this is a **better example**:
 ```csharp
 if(IsUserRegistered && IsUserVerified)
 {
@@ -92,7 +86,7 @@ if(IsUserRegistered && IsUserVerified)
 }
 ```
 
-Nestade if-satser blir i stort sett alltid en huvudvärk så undvik dessa. Baserat på den principen innebär det att följande är ett **dåligt exempel**:
+Nested if-statements is almost always a headache inducing mistake so avoid them alltogether. Based on this principle the following code is a **bad example**:
 ```csharp
 private Note ViewHiddenNote(Guid noteId)
 {
@@ -108,7 +102,7 @@ private Note ViewHiddenNote(Guid noteId)
 	}
 }
 ```
-och följande är ett **bättre exempel**:
+And this is a **better example**:
 ```csharp
 private Note ViewHiddenNote(Guid noteId)
 {
@@ -122,11 +116,20 @@ private Note ViewHiddenNote(Guid noteId)
 }
 ```
 
-## 2.3 Metodparametrar
-En metod ska ha två, max tre in-parametrar. Ifall du behöver fler parametrar än det så är det antingen dags för att skapa någon form av settings-objekt med standardvärden som fångar de flesta anropen, eller bryta ut hela metoden till en separat klass. Metoder med tio, femton, tjugo parametrar får aldrig förekomma.
+## 2.3 Method parameters
+A method should not contain more then two in-parameters, three at most. If you find  yourself needing more then that it's probably time to create som form of settings object with standard values that catches most of the method calls, or break out the whole method into a separate class. Methods with ten, fifteen, twenty parameters is a abomination that must never be allowed to exist.
 
-## 2.4 Controllers i MVC
-Controllers i projekt som följer MVC-mönstret är **framför allt till för routing**. Inte logik, validering och annat. Har du en endpoint där det inte omedelbart blir klart vad det är som händer och vilken vy eller dylikt som servas då är det också dags att överväga att refaktorera om den. Använd middleware för att validera data och services/vad helst du vill för att bygga upp modeller, konvertera DTO:s osv.
+## 2.4 Controllers in MVC
+Controllers in project that follows the MVC pattern is **mainly for routing** - not logic, validation or anything else. If you got a endpoint and it isn't obvious what is happening or which view (or similar) that will be served, then it's time to concider some refactoring. Use a middleware for data validation and services for building models, converting DTO:s etc.
+
+
+
+
+
+
+
+# 3. SOLID and you
+
 
 
 # 3. SOLID och du
